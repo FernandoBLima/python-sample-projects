@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+      
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    command: python index.py
+    env_file:
+      - ./gateway/gateway.env
+    depends_on:
+      - server
+    ports:
+      - 7000:7000
+    networks:
+      - backend
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server
+    command: python index.py
+    ports:
+      - 8000:8000
+    environment:
+      - HOME='MICROSERVICE SERVER'
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
