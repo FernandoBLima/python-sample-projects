@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  rabbitmqServer:
+    image: "rabbitmq:3.6-management-alpine"
+    hostname: "rabbitmq-host"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "test"
+      RABBITMQ_DEFAULT_PASS: "test"
+    networks:
+      - backend
+
+  producer:
+    build:
+      context: ./producer
+      dockerfile: Dockerfile
+    container_name: producer
+    command: python main.py
+    env_file:
+      - ./producer/producer.env
+    ports:
+      - 7000:7000
+    depends_on:
+      - rabbitmqServer
+      - receiver
+    networks:
+      - backend
+
+  receiver:
+    build:
+      context: ./receiver
+      dockerfile: Dockerfile
+    restart: always
+    container_name: receiver
+    command: python index.py
+    depends_on:
+      - rabbitmqServer
+    env_file:
+      - ./receiver/receiver.env
+    ports:
+      - 8000:8000
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

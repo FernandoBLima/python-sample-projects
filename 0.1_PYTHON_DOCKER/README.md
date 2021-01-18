@@ -1,4 +1,4 @@
-# Sample Python Microservices Dockerized using AIOHTTP #
+# Sample Python Microservices using AIOHTTP Dockerized #
 ---
 
 ## How to configure
