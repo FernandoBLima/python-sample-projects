@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  mongodb:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    restart: on-failure
+    networks:
+      - backend
+
+  mongo-seed:
+    build: ./mongo-seed
+    links:
+      - mongodb
+    networks:
+      - backend
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server
+    command: python app.py
+    env_file:
+      - ./server/.env
+    depends_on:
+      - mongodb
+      - mongo-seed
+    ports:
+      - 8000:8000
+    networks:
+      - backend
+    restart: always
+
+networks:
+  backend:
+    driver: bridge

@@ -1,0 +1,6 @@
+pymongo==3.11.2
+mongoengine==0.22.1
+aiohttp==3.7.3
+webargs==7.0.1
+aiohttp-swagger==1.0.15
+python-dotenv==0.15.0
